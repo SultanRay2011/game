@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        .choices {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            font-size: 24px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock Paper Scissors</h1>
+    <div class="choices">
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+    </div>
+    <div id="result"></div>
+
+    <script>
+        const rockButton = document.getElementById('rock');
+        const paperButton = document.getElementById('paper');
+        const scissorsButton = document.getElementById('scissors');
+        const resultDiv = document.getElementById('result');
+
+        const choices = ['rock', 'paper', 'scissors'];
+
+        rockButton.addEventListener('click', () => playGame('rock'));
+        paperButton.addEventListener('click', () => playGame('paper'));
+        scissorsButton.addEventListener('click', () => playGame('scissors'));
+
+        function playGame(userChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+
+            if (userChoice === computerChoice) {
+                result = `It's a tie! Both chose ${userChoice}.`;
+            } else if (
+                (userChoice === 'rock' && computerChoice === 'scissors') ||
+                (userChoice === 'scissors' && computerChoice === 'paper') ||
+                (userChoice === 'paper' && computerChoice === 'rock')
+            ) {
+                result = `You win! ${userChoice} beats ${computerChoice}.`;
+            } else {
+                result = `You lose! ${computerChoice} beats ${userChoice}.`;
+            }
+
+            resultDiv.textContent = result;
+        }
+    </script>
+</body>
+</html>
+```
+
+This single HTML file contains everything needed to run the Rock Paper Scissors game. You can save this code as an HTML file and open it in a web browser to play the game.
+
+Let me know if you have any further questions or if there's anything else I can help you with!
