@@ -8,21 +8,29 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     body {
-      background: #f0f4f8;
+      background: linear-gradient(to right, #6dd5ed, #2193b0);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      color: #fff;
     }
     .screen {
       display: none;
       flex-direction: column;
       align-items: center;
+      text-align: center;
       gap: 20px;
+      width: 90%;
+      max-width: 600px;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 20px;
       animation: fadeIn 0.5s ease forwards;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     }
     .screen.active {
       display: flex;
@@ -32,35 +40,46 @@
       font-size: 1rem;
       cursor: pointer;
       border: none;
-      background: #007bff;
+      background: #ff9800;
       color: white;
       border-radius: 10px;
       transition: 0.3s;
     }
     button:hover {
       transform: scale(1.05);
-      background: #0056b3;
+      background: #e67e22;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .question {
-      margin: 10px 0;
+    input[type="text"] {
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      width: 100%;
+      margin-top: 10px;
+    }
+    .timer {
+      font-size: 1.5rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div id="home" class="screen active">
-    <h1>Select a Subject</h1>
+    <h1 style="font-size: 2rem;">Choose a Subject</h1>
     <button onclick="startQuiz('Mathematics')">Mathematics</button>
     <button onclick="startQuiz('English')">English</button>
     <button onclick="startQuiz('History')">History</button>
     <button onclick="startQuiz('Science')">Science</button>
   </div>  <div id="quiz" class="screen">
     <h2 id="subject-title"></h2>
-    <div id="question-container"></div>
-    <button onclick="submitQuiz()">Submit</button>
+    <div class="timer" id="timer">20</div>
+    <div id="question-box"></div>
+    <input type="text" id="answer" placeholder="Your answer..." />
+    <button onclick="nextQuestion()">Next Question</button>
   </div>  <div id="result" class="screen">
     <h2>Your Results</h2>
     <p id="score"></p>
@@ -119,32 +138,59 @@
     };
 
     let selectedSubject = '';
-    let startTime;
+    let startTime, timerInterval;
+    let currentQuestionIndex = 0;
+    let correct = 0;
 
     function startQuiz(subject) {
       selectedSubject = subject;
       startTime = new Date();
+      currentQuestionIndex = 0;
+      correct = 0;
+
       document.getElementById("home").classList.remove("active");
       document.getElementById("quiz").classList.add("active");
       document.getElementById("subject-title").textContent = subject + " Quiz";
-      const container = document.getElementById("question-container");
-      container.innerHTML = '';
-      questions[subject].forEach((item, index) => {
-        container.innerHTML += `
-          <div class="question">
-            <p>${index + 1}. ${item.q}</p>
-            <input type="text" id="q${index}" />
-          </div>`;
-      });
+
+      showQuestion();
     }
 
-    function submitQuiz() {
-      let correct = 0;
-      const userAnswers = [];
-      questions[selectedSubject].forEach((item, index) => {
-        const answer = document.getElementById(`q${index}`).value.trim().toLowerCase();
-        if (answer === item.a.toLowerCase()) correct++;
-      });
+    function showQuestion() {
+      document.getElementById("answer").value = "";
+      const qObj = questions[selectedSubject][currentQuestionIndex];
+      document.getElementById("question-box").innerHTML = `<h3>Question ${currentQuestionIndex + 1} of 10</h3><p>${qObj.q}</p>`;
+      startTimer();
+    }
+
+    function startTimer() {
+      let timeLeft = 20;
+      document.getElementById("timer").textContent = timeLeft;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById("timer").textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          nextQuestion();
+        }
+      }, 1000);
+    }
+
+    function nextQuestion() {
+      clearInterval(timerInterval);
+      const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+      const correctAnswer = questions[selectedSubject][currentQuestionIndex].a.toLowerCase();
+      if (userAnswer === correctAnswer) correct++;
+
+      currentQuestionIndex++;
+      if (currentQuestionIndex < 10) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
       const endTime = new Date();
       const timeSpent = Math.floor((endTime - startTime) / 1000);
       document.getElementById("quiz").classList.remove("active");
