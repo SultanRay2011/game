@@ -1,77 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rock Paper Scissors</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-        }
+  <meta charset="UTF-8">
+  <title>Rock Paper Scissors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      text-align: center;
+      padding: 40px;
+    }
 
-        .choices {
-            margin-top: 20px;
-        }
+    h1 {
+      color: #333;
+    }
 
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .buttons {
+      margin: 20px 0;
+    }
 
-        #result {
-            font-size: 24px;
-            margin-top: 20px;
-        }
-    </style>
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+      background: #007bff;
+      color: white;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .result {
+      margin-top: 30px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .choices {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
-    <h1>Rock Paper Scissors</h1>
-    <div class="choices">
-        <button id="rock">Rock</button>
-        <button id="paper">Paper</button>
-        <button id="scissors">Scissors</button>
-    </div>
-    <div id="result"></div>
 
-    <script>
-        const rockButton = document.getElementById('rock');
-        const paperButton = document.getElementById('paper');
-        const scissorsButton = document.getElementById('scissors');
-        const resultDiv = document.getElementById('result');
+  <h1>Rock Paper Scissors</h1>
 
-        const choices = ['rock', 'paper', 'scissors'];
+  <div class="buttons">
+    <button onclick="play('rock')">Rock</button>
+    <button onclick="play('paper')">Paper</button>
+    <button onclick="play('scissors')">Scissors</button>
+  </div>
 
-        rockButton.addEventListener('click', () => playGame('rock'));
-        paperButton.addEventListener('click', () => playGame('paper'));
-        scissorsButton.addEventListener('click', () => playGame('scissors'));
+  <div class="result" id="resultText"></div>
+  <div class="choices" id="choiceText"></div>
 
-        function playGame(userChoice) {
-            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
-            let result = '';
+  <script>
+    function play(playerChoice) {
+      const choices = ['rock', 'paper', 'scissors'];
+      const computerChoice = choices[Math.floor(Math.random() * 3)];
 
-            if (userChoice === computerChoice) {
-                result = `It's a tie! Both chose ${userChoice}.`;
-            } else if (
-                (userChoice === 'rock' && computerChoice === 'scissors') ||
-                (userChoice === 'scissors' && computerChoice === 'paper') ||
-                (userChoice === 'paper' && computerChoice === 'rock')
-            ) {
-                result = `You win! ${userChoice} beats ${computerChoice}.`;
-            } else {
-                result = `You lose! ${computerChoice} beats ${userChoice}.`;
-            }
+      let result = '';
+      if (playerChoice === computerChoice) {
+        result = "It's a draw!";
+      } else if (
+        (playerChoice === 'rock' && computerChoice === 'scissors') ||
+        (playerChoice === 'paper' && computerChoice === 'rock') ||
+        (playerChoice === 'scissors' && computerChoice === 'paper')
+      ) {
+        result = 'You win!';
+      } else {
+        result = 'You lose!';
+      }
 
-            resultDiv.textContent = result;
-        }
-    </script>
+      document.getElementById('resultText').textContent = result;
+      document.getElementById('choiceText').textContent = 
+        `You chose ${playerChoice}, computer chose ${computerChoice}.`;
+    }
+  </script>
+
 </body>
 </html>
-```
-
-This single HTML file contains everything needed to run the Rock Paper Scissors game. You can save this code as an HTML file and open it in a web browser to play the game.
-
-Let me know if you have any further questions or if there's anything else I can help you with!
